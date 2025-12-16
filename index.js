@@ -3,14 +3,15 @@ const cors = require('cors');
 const app = express();
 const port = 4504 ;
 require('dotenv').config();
-
+const emailRoutes = require('./src/routes/email');
 
 app.use(cors({
-    origin: "localhost:4467",
-    methods: ["GET"],
+  origin: "localhost:4467",
+  methods: ["GET"],
 }));
 
 app.use(express.json());
+app.use('/email', emailRoutes);
 
 
 app.get('/', (req, res) => {
