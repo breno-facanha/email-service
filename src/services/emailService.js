@@ -1,7 +1,32 @@
 const { MailerSend } = require('mailersend');
 
 const mailersend = new MailerSend({
-  api_key: process.env.MAILERSEND_API_KEY,
+  apiKey: process.env.MAILERSEND_API_KEY,
 });
 
-module.exports = mailersend;
+async function sentEmail(to, toName, subject, html, text = "") {
+    try {
+        const sentEmail = await mailersend.email.send({
+            from: {
+                email: process.env.MAILERSEND_FROM_EMAIL,
+                name: process.env.MAILERSEND_FROM_NAME|| "Time de suporte",
+
+            },
+            to: [
+                {
+                    email: to,
+                    name: toName || to,
+                },
+            ],
+            subject: subject,
+            html: html,
+            text: text,
+        })
+        return { success: true, data: sentEmail };
+    } catch (error) {
+        console.error('Erro ao enviar email:', error.message);
+        return { success: false, error: error.message };
+    }
+}
+
+module.exports = {sentEmail};
